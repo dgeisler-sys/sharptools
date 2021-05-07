@@ -118,6 +118,7 @@ function renderWeather(d,unit,textColor){
 	}
 
 	document.getElementById("container").style.color = weatherColor;
+	document.getElementById('today').innerHTML = "TODAY"
   	document.getElementById('icon').innerHTML = "<img src = https://openweathermap.org/img/wn/" + d.current.weather[0].icon + "@2x.png>";
 	document.getElementById('dh').innerHTML = "H:" + Math.round(d.daily[0].temp.max) + "&deg";
 	document.getElementById('dl').innerHTML = "L:" + Math.round(d.daily[0].temp.min) + "&deg";
@@ -158,7 +159,7 @@ function renderWeather(d,unit,textColor){
 			<td style="width:50%;">
 			<table style="width: 100%; text-align:center">
 				<tbody><tr>
-					<td style="padding-top:25px" colspan="2">TODAY</td>
+					<td id="today" style="padding-top:25px" colspan="2"></td>
 				</tr>
 					<tr>
 					<td id="description" colspan="2"></td>
