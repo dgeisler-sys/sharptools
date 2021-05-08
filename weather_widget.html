@@ -1,0 +1,224 @@
+﻿<!-- Do not edit below -->
+<script type="application/json" id="tile-settings">
+{
+  "schema": "0.1.0",
+  "settings": [
+    {"name": "api", "type": "STRING", "label": "*API Key"},
+    {"name": "lat", "label": "*Latitude", "type": "STRING"},
+    {"type": "STRING", "label": "*Longitude", "name": "lon"},
+    {"type": "BOOLEAN", "name": "unit", "label": "Display measures in Celsius"},
+    {
+      "name": "lang",
+      "type": "STRING",
+      "label": "Language (optional) - Default: en"
+    },
+    {
+      "name": "textColor",
+      "label": "Text Color (ex: White, #FF8C00, rgb(0,0,0))",
+      "type": "STRING"
+    }
+  ],
+  "name": "Weather Widget"
+}
+</script>
+<script src="https://cdn.sharptools.io/js/custom-tiles.js"></script>
+<script>
+function showMsg(message,color){
+	console.error(message);
+	stio.showToast(message,color);
+}
+
+function poll(){
+	var settings,unit,language,textColor
+	stio.ready().then(function(data){
+	settings = data && data.settings;
+	if((settings.api == null || settings.api == "") && (settings.lat == null || settings.lat == "") && (settings.lon == null || settings.lon == "")){
+	showMsg("To begin, edit the tile and enter the required (*) fields.","blue")
+	}else{
+	if(settings.api == null || settings.api == ""){
+		showMsg("An API Key is required.","red");
+	}
+	if(settings.lat == null || settings.lat == ""){
+		showMsg("The location Latitude is required.","red");
+	}	
+    if(settings.lon == null || settings.lon == ""){
+		showMsg("The location Longitude is required.","red");
+	}
+	}
+	if(settings.unit){
+		unit = "metric"
+	}else{
+		unit = "imperial"
+	}
+	if(settings.lang == null || settings.lang == ""){
+		language = "en"
+	}else{
+		language = settings.lang
+	}
+	if(settings.textColor == null || settings.textColor == ""){
+		textColor = "#FFF"
+	}else{
+		textColor = settings.textColor
+	}
+
+var key      = settings.api,
+	lat      = settings.lat,
+	lon      = settings.lon,
+	units    = unit,
+    lang     = language,
+	api_call = 'https://api.openweathermap.org/data/2.5/onecall?units=' + units + '&lat=' + lat + '&lon=' + lon + '&lang=' + lang + '&appid=' + key;
+
+    fetch(api_call)  
+	.then(function(resp){
+		return resp.json()
+	})
+	.then(function(data){
+      renderWeather(data,unit,textColor)
+	})
+	.catch(function() {
+	});
+    });
+}
+
+function renderWeather(d,unit,textColor){
+    console.log(d);
+  	console.log(textColor);	
+  	const weatherColor = textColor
+//Do not edit above -->
+//******************************* -->
+//Place custom content (JavaScript/HTML) below this line -->
+//******************************* -->
+//Begin JavaScript -->
+	function getDay(day){
+	var day
+	switch(day){
+		case 0:
+		day = "SUN"
+		break;
+		case 1:
+		day = "MON"
+		break;
+		case 2:
+		day = "TUE"
+		break;
+		case 3:
+		day = "WED"
+		break;
+		case 4:
+		day = "THU"
+		break;
+		case 5:
+		day = "FRI"
+		break;
+		case 6:
+		day = "SAT"
+		break;
+	}
+	return day
+	}
+
+	document.getElementById("container").style.color = weatherColor;
+	document.getElementById("today").innerHTML = "TODAY";
+  	document.getElementById('icon').innerHTML = "<img src = https://openweathermap.org/img/wn/" + d.current.weather[0].icon + "@2x.png>";
+	document.getElementById('dh').innerHTML = "H:" + Math.round(d.daily[0].temp.max) + "&deg";
+	document.getElementById('dl').innerHTML = "L:" + Math.round(d.daily[0].temp.min) + "&deg";
+	document.getElementById('temp').innerHTML = Math.round(d.current.temp) + "&deg";
+	document.getElementById('description').innerHTML = d.daily[0].weather[0].description.toUpperCase();
+	document.getElementById('d1').innerHTML = getDay(new Date(d.daily[1].dt*1000).getDay());
+	document.getElementById('d1icon').innerHTML = "<img src = https://openweathermap.org/img/wn/" + d.daily[1].weather[0].icon + ".png style='vertical-align:middle'>";
+	document.getElementById('d1h').innerHTML = Math.round(d.daily[1].temp.max)+"&deg";
+	document.getElementById('d1l').innerHTML = Math.round(d.daily[1].temp.min)+"&deg";
+	document.getElementById('d2').innerHTML = getDay(new Date(d.daily[2].dt*1000).getDay());
+	document.getElementById('d2icon').innerHTML = "<img src = https://openweathermap.org/img/wn/" + d.daily[2].weather[0].icon + ".png style='vertical-align:middle'>";
+	document.getElementById('d2h').innerHTML = Math.round(d.daily[2].temp.max)+"&deg";
+	document.getElementById('d2l').innerHTML = Math.round(d.daily[2].temp.min)+"&deg";
+	document.getElementById('d3').innerHTML = getDay(new Date(d.daily[3].dt*1000).getDay());
+	document.getElementById('d3icon').innerHTML = "<img src = https://openweathermap.org/img/wn/" + d.daily[3].weather[0].icon + ".png style='vertical-align:middle'>";
+	document.getElementById('d3h').innerHTML = Math.round(d.daily[3].temp.max)+"&deg";
+	document.getElementById('d3l').innerHTML = Math.round(d.daily[3].temp.min)+"&deg";
+	document.getElementById('d4').innerHTML = getDay(new Date(d.daily[4].dt*1000).getDay());
+	document.getElementById('d4icon').innerHTML = "<img src = https://openweathermap.org/img/wn/" + d.daily[4].weather[0].icon + ".png style='vertical-align:middle'>";
+	document.getElementById('d4h').innerHTML = Math.round(d.daily[4].temp.max)+"&deg";
+	document.getElementById('d4l').innerHTML = Math.round(d.daily[4].temp.min)+"&deg";
+	document.getElementById('d5').innerHTML = getDay(new Date(d.daily[5].dt*1000).getDay());
+	document.getElementById('d5icon').innerHTML = "<img src = https://openweathermap.org/img/wn/" + d.daily[5].weather[0].icon + ".png style='vertical-align:middle'>";
+	document.getElementById('d5h').innerHTML = Math.round(d.daily[5].temp.max)+"&deg";
+	document.getElementById('d5l').innerHTML = Math.round(d.daily[5].temp.min)+"&deg";
+	document.getElementById('d6').innerHTML = getDay(new Date(d.daily[6].dt*1000).getDay());
+	document.getElementById('d6icon').innerHTML = "<img src = https://openweathermap.org/img/wn/" + d.daily[6].weather[0].icon + ".png style='vertical-align:middle'>";
+	document.getElementById('d6h').innerHTML = Math.round(d.daily[6].temp.max)+"&deg";
+	document.getElementById('d6l').innerHTML = Math.round(d.daily[6].temp.min)+"&deg";
+
+//End custom JavaScript -->
+}//Do not delete this line
+</script><!-- Do not delete this line -->
+<!-- Place HTML below this line -->
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+</head>
+<style>
+html, body {height:100vh !important; width:100% !important; margin:0;}
+</style>
+<div id="container" style="width:95%; height:95vh; display:flex; padding:10px">
+<div style="width:50%; text-align:center;">
+<div style="display:flex; display:flex; align-items: center; justify-content: center; height:16.5%;">
+<div id="today"></div>
+</div>
+<div id="description" style="height:10%;"></div>
+<div style="display:flex; height:10%;">
+<div id="dh" style="width:50%;"></div>
+<div id="dl" style="width:50%;"></div>
+</div>
+<div style="height:5%;"><hr style="width:80%; height:1px"></div>
+<div id="icon" style="height:25%;"></div>
+<div id="temp" style="height:32%; font-size:350%"></div>
+</div>
+<div style="width:50%;">
+<div style="display:flex; align-items: center; height:16.5%;">
+<div id="d1" style="width:20%;"></div>
+<div id="d1icon" style="width:40%; text-align:center"></div>
+<div id="d1h" style="width:20%;"></div>
+<div id="d1l" style="width:20%;"></div>
+</div>
+<div style="display:flex; align-items: center; height:16.5%;">
+<div id="d2" style="width:20%;"></div>
+<div id="d2icon" style="width:40%; text-align:center"></div>
+<div id="d2h" style="width:20%;"></div>
+<div id="d2l" style="width:20%;"></div>
+</div>
+<div style="display:flex; align-items: center; height:16.5%;">
+<div id="d3" style="width:20%;"></div>
+<div id="d3icon" style="width:40%; text-align:center"></div>
+<div id="d3h" style="width:20%;"></div>
+<div id="d3l" style="width:20%;"></div>
+</div>
+<div style="display:flex; align-items: center; height:16.5%;">
+<div id="d4" style="width:20%;"></div>
+<div id="d4icon" style="width:40%; text-align:center"></div>
+<div id="d4h" style="width:20%;"></div>
+<div id="d4l" style="width:20%;"></div>
+</div>
+<div style="display:flex; align-items: center; height:16.5%;">
+<div id="d5" style="width:20%;"></div>
+<div id="d5icon" style="width:40%; text-align:center"></div>
+<div id="d5h" style="width:20%;"></div>
+<div id="d5l" style="width:20%;"></div>
+</div>
+<div style="display:flex; align-items: center; height:17.5%;">
+<div id="d6" style="width:20%;"></div>
+<div id="d6icon" style="width:40%; text-align:center"></div>
+<div id="d6h" style="width:20%;"></div>
+<div id="d6l" style="width:20%;"></div>
+</div>
+</div>
+</div>
+<!--******************************* -->
+<!--End custom content -->
+<!--******************************* -->
+<!-- Do not edit below -->
+<script>
+window.onload = function(){
+	poll();
+}
+setInterval(poll, 900000);
+</script>
